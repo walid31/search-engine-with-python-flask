@@ -1,0 +1,2 @@
+La première phase en recherche d'information est d'établir des techniques permettant de passer d'un document textuel à une 
+représentation exploitable par un modèle de RI ( un index).

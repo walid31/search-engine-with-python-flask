@@ -1,0 +1,2 @@
+Un Système de recherche d'information est un système qui permet de retrouver une information
+pertinente par rapport à une requête dans une grande collection de documents.
