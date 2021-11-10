@@ -1,13 +1,15 @@
 from exercice1 import inverse_file
 
 df = inverse_file()
+# set the terms as index
 df.set_index("Term", inplace = True)
-df.sort_index(axis = 0)
-print(df)
+
+# get frequencies by document number
 def access_by_doc_number(doc_number):
 	document = 'D' + str(doc_number)
 	return df.loc[:,['Term', document]]
 
+# get frequencies by term
 def access_by_term(term):
 
 	return df.loc[term]
