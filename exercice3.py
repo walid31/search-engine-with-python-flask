@@ -8,7 +8,7 @@ df = inverse_file()
 # set the terms as index
 df.set_index("Term", inplace = True)
 
-print(df)
+
 # number of documents
 N = 4
 
@@ -40,4 +40,4 @@ def inverse_weighted_file():
 			inverse_weighted_file.at[row, col] = weight(row, col)
 	return inverse_weighted_file
 	
-print(inverse_weighted_file())
+# print(inverse_weighted_file())
