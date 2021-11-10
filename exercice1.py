@@ -88,5 +88,5 @@ def inverse_file():
 		inverse_file.append(instance)
 	
 	return pd.DataFrame(inverse_file, columns=['Term', 'D1', 'D2', 'D3', 'D4'])
-print(inverse_file())
+# print(inverse_file())
 
