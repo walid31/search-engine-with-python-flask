@@ -1,0 +1,142 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
+              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Default</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+                <form action="/boolean_model_search">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="input-group input-group-alternative mb-4">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+                          </div>
+                          <input class="form-control form-control-alternative" name="query" placeholder="Search by query" type="text">
+                          
+                        </div>
+                      </div>
+                      {% if msg %}
+                        <span class="badge badge-danger badge-pill">{{msg}}</span>
+                      {% endif %}
+                    </div>
+                </form>
+                </div>
+              </div>
+          </div>
+          <div >
+            
+            <div class="row">
+                <div class="col">
+                    <div class="card card-stats mb-4 mb-lg-0" style="width: 41rem;">
+                        <div class="row ml-2 mt-2">
+                            <div class="col">
+                                <h5 class="card-title text-uppercase">the rules of queries based on the <span class="text-danger">boolean model</span></h5>
+                            </div>
+                        </div>    
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="h3 font-weight-bold mb-0">- A query is a set of words with Boolean operators:</span> <span class="text-warning">AND (&and;), OR (&or;), NOT (&not;)</span>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="h3 font-weight-bold mb-0">- terms must be <span class="text-warning text-uppercase">lowercase</span> and operators must be in<span class="text-warning text-uppercase"> [+, *, -]:</span></span>
+                                    <ul>
+                                        <li><span class="text-default">AND : +</span></li>
+                                        <li><span class="text-default">OR : *</span></li>
+                                        <li><span class="text-default">NOT : -</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="text-nowrap">Example :</span>
+                                    <ul>
+                                        <li><span class="text-default mr-2">t1 &and; (t2 &or; &not; t3)</span> ==>  <span class="text-default mr-2"> t1 AND (t2 OR NOT t3)</span></li>
+                                        <li><span class="text-default mr-2">&not; t9 &or; &not;(t4 &and; t3)</span> ==>  <span class="text-default mr-2"> NOT t9 OR NOT(t4 AND t3)</span></li>
+                                        <li><span class="text-default mr-2">t3 &and; t12 &and; t33</span> ==>  <span class="text-default mr-2"> t3 AND t12 AND t33</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="h3 font-weight-bold mb-0">- Exact match based on the presence or absence of the query terms in the documents</span>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="text-nowrap">Example :</span>
+                                    <ul>
+                                        <li><span class="text-default mr-2">RSV(q,d)=1 or 0</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if lenPrt >= 0 %}
+                <div class="col">
+                    <div class="card card-status ml-2" style="background-color: burlywood;">
+                        <div class="card-body">
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <span class="h4 font-weight-bold mb-0 text-uppercase">The query :</span>
+                                    <span class="h5 font-weight-bold">{{query}}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <span class="h4 font-weight-bold mb-0 text-uppercase">pertinent documents :</span>
+                                    <span class="h5 font-weight-bold">{{pertinent}}</span>
+                                    {% if lenPrt == 0 %}
+                                        <span class="h5 font-weight-bold">There is no document</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            
+            
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
