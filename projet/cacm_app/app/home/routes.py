@@ -69,19 +69,19 @@ def search_freq_file():
             current_page = [document + ' -> '+ dict_freq[document]]
             return render_template('all_frequencies.html', segment='all_frequencies', current_page = current_page)
         else:
-            print('not')
             return redirect(url_for('home_blueprint.all_frequencies', page = '1', method="GET"))    
 
 @blueprint.route('/boolean_model_search', methods=['GET', 'POST'])
 def boolean_model_search():
     if request.method == 'GET':
         query = request.args['query']
-         
+
         msg = query_validation(query)
         if msg != True:
             return render_template('boolean_model.html', segment='booleam_model', msg = msg)
         else:
             query = query.replace('*', 'and').replace('+', 'or').replace('-', 'not')
+            print(query)
             pertinent = evaluation(query, all_freq_pkl)
             
             return render_template('boolean_model.html', segment='booleam_model', pertinent = pertinent, query = query, lenPrt = len(pertinent))    
@@ -122,43 +122,60 @@ def get_segment( request ):
         return None  
 
 # Query regex
-def query_validation(query):
-	if len(query) == 0:
-		return 'Enter a query please'
+def query_validation(requete):
+	if requete=="":
+		return 'Please enter a query'
 	else:
 		operator=["*","+"]
 		opr_not="-"
-		req=query.split()
+		requete = requete.replace("(", "").replace(")", "")
+		req=requete.split()
 		if(req[len(req)-1].lower()==opr_not):
-			return 'The query must respect the rules'
+			return 'Query cant end with NOT operand'
 		for i in range(0,len(req)-1):
 			if req[i].lower()==opr_not and req[i+1] in operator:
-				return 'The query must respect the rules'
+				return 'Query must respect the rules'
 		req=[r for r in req if r.lower()!= opr_not]
 		if len(req)%2 == 0 :
-			return 'The query must respect the rules'
+			return 'Query must respect the rules'
 		for i in range(1,len(req),2):
 			if req[i].lower() not in operator:
-				return 'The query must respect the rules'
+				return 'Query must respect the rules'
 		for i in range(0,len(req),2):
 			if req[i].lower() in operator:
-				return 'The query must respect the rules'
+				return 'Query must respect the rules'
 		return True
 
 def evaluation(query, files):
     pertinent_docs = ""
-    opr_par_not = 'not, (, )'
+    opr_not = 'not'
     not_position = []
-    
+    open_par = "("
+    close_par = ")"
+    open_position = []
+    close_position = []
     init_query = query.split()
     
     # keep traceability of not position
     for i in range(0, len(init_query)):
-        if init_query[i].lower() in opr_par_not :
+        if init_query[i].lower() in opr_not :
             not_position.append(i)
-    
+    # keep traceability of open par position
+    for i in range(0, len(init_query)):
+        if init_query[i].lower() in open_par :
+            open_position.append(i)        
+    # keep traceability of close par position
+    for i in range(0, len(init_query)):
+        if init_query[i].lower() in close_par :
+            close_position.append(i)
+
     # eliminate not operand
-    init_query = [r for r in init_query if r.lower() not in opr_par_not]
+    init_query = [r for r in init_query if r.lower() not in opr_not]
+    # eliminate open par
+    init_query = [r for r in init_query if r.lower() not in open_par]
+    # eliminate close par
+    init_query = [r for r in init_query if r.lower() not in close_par]
+
     for key, row in files.items():
         req = [r for r in init_query]
         for j in range(0, len(init_query), 2):
@@ -167,7 +184,11 @@ def evaluation(query, files):
             else:
                 req[j] = 0
         for pos in not_position:
-            req.insert(pos, opr_par_not)
+            req.insert(pos, opr_not)
+        for pos in open_position:
+            req.insert(pos, open_par)
+        for pos in close_position:
+            req.insert(pos, close_par)
         print(req)    
         current_query = ""
         for r in req:
